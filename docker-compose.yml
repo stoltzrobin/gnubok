@@ -44,18 +44,6 @@ services:
     # the host port, or use the caddy overlay to remove the host binding.
     ports:
       - "${PORT:-3000}:3000"
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    init: true
-    tmpfs:
-      - /tmp
-      - /app/.next:size=400m
-      - /app/public:size=200m
-    mem_limit: 1g
-    cpus: 2
-    pids_limit: 200
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
@@ -81,13 +69,6 @@ services:
     init: true
     security_opt:
       - no-new-privileges:true
-    cap_drop:
-      - ALL
-    read_only: true
-    tmpfs:
-      - /tmp
-    mem_limit: 64m
-    pids_limit: 30
     restart: unless-stopped
     logging:
       driver: json-file
