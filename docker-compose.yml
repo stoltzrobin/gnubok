@@ -51,6 +51,8 @@ services:
     init: true
     tmpfs:
       - /tmp
+      - /app/.next:size=400m
+      - /app/public:size=200m
     mem_limit: 1g
     cpus: 2
     pids_limit: 200
