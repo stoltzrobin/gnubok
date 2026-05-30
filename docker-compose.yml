@@ -43,7 +43,7 @@ services:
     # front (see docker-compose.caddy.yml). Override PORT in .env to change
     # the host port, or use the caddy overlay to remove the host binding.
     ports:
-      - "127.0.0.1:${PORT:-3000}:3000"
+      - "${PORT:-3000}:3000"
     security_opt:
       - no-new-privileges:true
     cap_drop:
