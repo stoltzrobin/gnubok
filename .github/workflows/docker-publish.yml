@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: erp-mafia/gnubok
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:
@@ -71,6 +71,33 @@ jobs:
             type=gha,scope=${{ github.ref_name }}
             type=gha,scope=main
           cache-to: type=gha,scope=${{ github.ref_name }},mode=max
+
+      - name: Extract metadata (cron)
+        id: meta-cron
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-cron
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Build and push (cron)
+        id: build-cron
+        uses: docker/build-push-action@v6
+        with:
+          context: ./docker
+          file: ./docker/cron.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cron.outputs.tags }}
+          labels: ${{ steps.meta-cron.outputs.labels }}
+          cache-from: |
+            type=gha,scope=${{ github.ref_name }}-cron
+            type=gha,scope=main-cron
+          cache-to: type=gha,scope=${{ github.ref_name }}-cron,mode=max
 
       - name: Install cosign
         uses: sigstore/cosign-installer@v3.7.0

@@ -26,6 +26,8 @@ RUN apk add --no-cache curl \
 # cap_drop:[ALL] and read_only:true in docker-compose.yml. The crontab is
 # bind-mounted read-only with default 644 perms (readable by all), and the
 # supercronic binary is world-executable (chmod 0755 above).
+COPY crontab.self-hosted /etc/supercronic/crontab
+
 USER nobody:nobody
 
 ENTRYPOINT ["supercronic"]
