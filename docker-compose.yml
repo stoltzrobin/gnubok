@@ -1,6 +1,8 @@
 services:
   app:
-    image: ghcr.io/erp-mafia/gnubok:${IMAGE_TAG:-latest}
+    build:
+      context: docker
+      dockerfile: app.Dockerfile
     environment:
       # ── Required ──────────────────────────────────────────────────────────
       - NEXT_PUBLIC_SUPABASE_URL
