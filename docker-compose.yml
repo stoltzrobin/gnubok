@@ -39,11 +39,11 @@ services:
       - UPSTASH_REDIS_REST_TOKEN
       - SENTRY_DSN
       - GNUBOK_WEBHOOK_SECRET
-    # Bound to loopback by default — put a TLS-terminating reverse proxy in
-    # front (see docker-compose.caddy.yml). Override PORT in .env to change
-    # the host port, or use the caddy overlay to remove the host binding.
     ports:
       - "${PORT:-3000}:3000"
+    volumes:
+      - app-next:/app/.next
+      - app-public:/app/public
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
@@ -66,12 +66,13 @@ services:
     environment:
       - CRON_SECRET=${CRON_SECRET}
       - APP_URL=http://app:3000
-    init: true
-    security_opt:
-      - no-new-privileges:true
     restart: unless-stopped
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "5"
+
+volumes:
+  app-next:
+  app-public:
