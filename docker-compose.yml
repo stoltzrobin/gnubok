@@ -1,8 +1,7 @@
 services:
   app:
-    build:
-      context: docker
-      dockerfile: app.Dockerfile
+    image: ghcr.io/erp-mafia/gnubok:${IMAGE_TAG:-latest}
+    entrypoint: ["/bin/sh", "-c", "chmod -R 777 /app/public /app/.next 2>/dev/null || true; exec /app/docker-entrypoint.sh node server.js"]
     environment:
       # ── Required ──────────────────────────────────────────────────────────
       - NEXT_PUBLIC_SUPABASE_URL
