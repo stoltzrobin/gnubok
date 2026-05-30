@@ -71,9 +71,9 @@ services:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 5s
-      start_period: 30s
-      start_interval: 5s
-      retries: 3
+      start_period: 120s
+      start_interval: 10s
+      retries: 5
     logging:
       driver: json-file
       options:
