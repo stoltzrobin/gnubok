@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/stoltzrobin/gnubok:${IMAGE_TAG:-latest}
+    image: ghcr.io/erp-mafia/gnubok:${IMAGE_TAG:-latest}
     environment:
       # ── Required ──────────────────────────────────────────────────────────
       - NEXT_PUBLIC_SUPABASE_URL
@@ -81,7 +81,9 @@ services:
         max-file: "5"
 
   cron:
-    image: ghcr.io/stoltzrobin/gnubok-cron:${IMAGE_TAG:-latest}
+    build:
+      context: docker
+      dockerfile: cron.Dockerfile
     depends_on:
       app:
         condition: service_healthy
