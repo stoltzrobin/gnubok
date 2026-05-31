@@ -27,16 +27,17 @@ if [ -n "$placeholders_found" ]; then
   printf "WARNING: These variables appear to contain placeholder values:\n%bPlease set them to real values before running in production.\n" "$placeholders_found" >&2
 fi
 
-# Populate writable mount points from the baked-in templates. Under
-# docker-compose's read_only:true, /app/.next and /app/public are tmpfs
-# mounts; cp populates them in RAM. Without read_only:true the directories
-# were created empty in the Dockerfile, so cp still works.
+# Populate writable mount points from the baked-in templates.
 if [ -d /opt/gnubok-template/.next ]; then
   cp -R /opt/gnubok-template/.next/. /app/.next/
 fi
 if [ -d /opt/gnubok-template/public ]; then
   cp -R /opt/gnubok-template/public/. /app/public/
 fi
+
+# Copied files inherit permissions from the build stage and may be read-only.
+# Make them writable so the sed substitution below can create temp files.
+chmod -R u+w /app/.next /app/public 2>/dev/null || true
 
 # Ensure Next.js's runtime cache directory is writable by the unprivileged user.
 mkdir -p /app/.next/cache
